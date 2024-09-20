@@ -1,0 +1,55 @@
+services:
+  api:
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+    command: local
+    environment:
+      DJANGO_SETTINGS_MODULE: project.settings
+      RABBITMQ_HOST: rabbitmq
+    networks:
+        - rabbitmq_go_net
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - pep_rabbitmq_data:/var/lib/rabbitmq/
+        - pep_rabbitmq_log:/var/log/rabbitmq
+    restart: always
+    networks:
+        - rabbitmq_go_net
+
+  db:
+    image: mysql:8.0
+    container_name: db
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'pwd'
+      MYSQL_ROOT_PASSWORD: 'pwd'
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    volumes:
+      - pep_mysql_data:/var/lib/mysql
+
+networks:
+  rabbitmq_go_net:
+    driver: bridge
+
+volumes:
+  pep_rabbitmq_data:
+  pep_rabbitmq_log:
+  pep_mysql_data:
+    driver: local

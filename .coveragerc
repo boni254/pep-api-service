@@ -1,0 +1,23 @@
+[run]
+relative_files = True
+branch = True
+omit =
+       *__init__.py*
+       *app.py
+       *admin.py
+       *wsgi.py
+       *urls.py
+       *.html
+
+source = ./app
+concurrency = multiprocessing
+parallel = true
+
+[report]
+omit =
+       *__init__.py*
+       *app.py
+       *admin.py
+       *wsgi.py
+       *urls.py
+       *.html
